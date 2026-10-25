@@ -22,9 +22,6 @@ let estaEnElSuelo = true;
 
 const fuerzaSalto = 12;
 const gravedad = 0.6;
-
-// Distancia entre el borde inferior de David
-// y el borde inferior del escenario.
 const margenSuelo = 15;
 
 // ===== COLOCAR A DAVID =====
@@ -74,63 +71,57 @@ function actualizarJuego() {
 
     // Movimiento vertical y gravedad
     if (!estaEnElSuelo) {
+        const posicionAnterior = posicionVertical;
+
         velocidadVertical += gravedad;
         posicionVertical += velocidadVertical;
 
-        const alturaSuelo =
-            escenario.clientHeight - david.offsetHeight - margenSuelo;
+        // Comprobar aterrizaje sobre las plataformas
+        const plataformas = document.querySelectorAll(".platform");
+        let aterrizoEnPlataforma = false;
 
-      
-        // Comprobar aterrizaje en el suelo
-        const alturaSuelo =
-            escenario.clientHeight - david.offsetHeight - margenSuelo;
+        for (const plataforma of plataformas) {
+            const davidIzquierda = posicionDavid;
+            const davidDerecha = posicionDavid + david.offsetWidth;
 
-        if (posicionVertical >= alturaSuelo) {
-            posicionVertical = alturaSuelo;
-            velocidadVertical = 0;
-            estaEnElSuelo = true;
-        } else {
-            // Comprobar aterrizaje sobre las plataformas
-            const plataformas = document.querySelectorAll(".platform");
+            const plataformaIzquierda = plataforma.offsetLeft;
+            const plataformaDerecha =
+                plataforma.offsetLeft + plataforma.offsetWidth;
 
-            for (const plataforma of plataformas) {
-                const davidIzquierda = posicionDavid;
-                const davidDerecha = posicionDavid + david.offsetWidth;
+            const bordeInferiorAnterior =
+                posicionAnterior + david.offsetHeight;
 
-                const plataformaIzquierda = plataforma.offsetLeft;
-                const plataformaDerecha =
-                    plataforma.offsetLeft + plataforma.offsetWidth;
+            const bordeInferiorActual =
+                posicionVertical + david.offsetHeight;
 
-                const davidAntesDeCaer =
-                    posicionVertical - velocidadVertical;
+            const plataformaArriba = plataforma.offsetTop;
 
-                const davidAbajoAntes =
-                    davidAntesDeCaer + david.offsetHeight;
+            if (
+                velocidadVertical > 0 &&
+                bordeInferiorAnterior <= plataformaArriba &&
+                bordeInferiorActual >= plataformaArriba &&
+                davidDerecha > plataformaIzquierda &&
+                davidIzquierda < plataformaDerecha
+            ) {
+                posicionVertical =
+                    plataformaArriba - david.offsetHeight;
 
-                const davidAbajoAhora =
-                    posicionVertical + david.offsetHeight;
-
-                const plataformaArriba = plataforma.offsetTop;
-
-                if (
-                    velocidadVertical > 0 &&
-                    davidAbajoAntes <= plataformaArriba &&
-                    davidAbajoAhora >= plataformaArriba &&
-                    davidDerecha > plataformaIzquierda &&
-                    davidIzquierda < plataformaDerecha
-                ) {
-                    posicionVertical =
-                        plataformaArriba - david.offsetHeight;
-
-                    velocidadVertical = 0;
-                    estaEnElSuelo = true;
-                    break;
-                }
+                velocidadVertical = 0;
+                estaEnElSuelo = true;
+                aterrizoEnPlataforma = true;
+                break;
             }
         }
 
-        david.style.top = posicionVertical + "px";
+        // Si no aterriza en una plataforma, comprobar el suelo
+        const alturaSuelo =
+            escenario.clientHeight - david.offsetHeight - margenSuelo;
 
+        if (!aterrizoEnPlataforma && posicionVertical >= alturaSuelo) {
+            posicionVertical = alturaSuelo;
+            velocidadVertical = 0;
+            estaEnElSuelo = true;
+        }
 
         david.style.top = posicionVertical + "px";
     }
@@ -167,8 +158,7 @@ document.addEventListener("keyup", function(event) {
     }
 });
 
-// Evita que David siga moviéndose si se pierde el foco
-// de la página mientras se pulsa una tecla.
+// Detener el movimiento si la página pierde el foco
 window.addEventListener("blur", function() {
     direccionDavid = 0;
 });
