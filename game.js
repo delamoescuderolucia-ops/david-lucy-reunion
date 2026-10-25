@@ -51,6 +51,15 @@ document.addEventListener("keyup", function(event) {
         direccionDavid = 0;
     }
 });
+function actualizarJuego() {
+    if (direccionDavid !== 0) {
+        moverDavid(direccionDavid);
+    }
+
+    requestAnimationFrame(actualizarJuego);
+}
+
+actualizarJuego();
 
 const botonIzquierda = document.getElementById("left-button");
 const botonDerecha = document.getElementById("right-button");
