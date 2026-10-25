@@ -64,10 +64,29 @@ actualizarJuego();
 const botonIzquierda = document.getElementById("left-button");
 const botonDerecha = document.getElementById("right-button");
 
-botonIzquierda.addEventListener("click", function() {
-    moverDavid(-1);
+function iniciarMovimiento(direccion) {
+    direccionDavid = direccion;
+}
+
+function detenerMovimiento() {
+    direccionDavid = 0;
+}
+
+botonIzquierda.addEventListener("pointerdown", function(event) {
+    event.preventDefault();
+    iniciarMovimiento(-1);
 });
 
-botonDerecha.addEventListener("click", function() {
-    moverDavid(1);
+botonDerecha.addEventListener("pointerdown", function(event) {
+    event.preventDefault();
+    iniciarMovimiento(1);
 });
+
+botonIzquierda.addEventListener("pointerup", detenerMovimiento);
+botonDerecha.addEventListener("pointerup", detenerMovimiento);
+
+botonIzquierda.addEventListener("pointerleave", detenerMovimiento);
+botonDerecha.addEventListener("pointerleave", detenerMovimiento);
+
+botonIzquierda.addEventListener("pointercancel", detenerMovimiento);
+botonDerecha.addEventListener("pointercancel", detenerMovimiento);
