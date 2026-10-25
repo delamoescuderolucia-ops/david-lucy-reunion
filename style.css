@@ -84,7 +84,7 @@ button:hover {
 
 #david {
     position: absolute;
-    bottom: 20px;
+    top: 0;
     left: 30px;
     color: #ff2a6d;
     font-size: 24px;
