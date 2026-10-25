@@ -65,25 +65,25 @@ function actualizarJuego() {
         moverDavid(direccionDavid);
     }
 
-    // Movimiento vertical
-    if (!estaEnElSuelo) {
-        velocidadVertical += gravedad;
+// ===== MOVIMIENTO VERTICAL =====
+if (!estaEnElSuelo) {
+    velocidadVertical += gravedad;
 
-        const posicionVertical = david.offsetTop + velocidadVertical;
-        const alturaSuelo = document.getElementById("game").clientHeight
-            - david.offsetHeight - 15;
+    const escenario = document.getElementById("game");
+    const alturaSuelo =
+        escenario.clientHeight - david.offsetHeight - 20;
 
-        if (posicionVertical >= alturaSuelo) {
-            david.style.top = "";
-            david.style.bottom = "20px";
+    const posicionActual = david.offsetTop;
+    const nuevaPosicion = posicionActual + velocidadVertical;
 
-            velocidadVertical = 0;
-            estaEnElSuelo = true;
-        } else {
-            david.style.bottom = "";
-            david.style.top = posicionVertical + "px";
-        }
+    if (nuevaPosicion >= alturaSuelo) {
+        david.style.top = alturaSuelo + "px";
+        velocidadVertical = 0;
+        estaEnElSuelo = true;
+    } else {
+        david.style.top = nuevaPosicion + "px";
     }
+}
 
     requestAnimationFrame(actualizarJuego);
 }
