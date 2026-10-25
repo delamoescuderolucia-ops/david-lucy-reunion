@@ -88,6 +88,14 @@ function actualizarJuego() {
     requestAnimationFrame(actualizarJuego);
 }
 
+// ===== HACER SALTAR A DAVID =====
+function saltar() {
+    if (estaEnElSuelo) {
+        velocidadVertical = -fuerzaSalto;
+        estaEnElSuelo = false;
+    }
+}
+
 actualizarJuego();
 
 const botonIzquierda = document.getElementById("left-button");
