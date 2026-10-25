@@ -40,3 +40,14 @@ document.addEventListener("keydown", function(event) {
         moverDavid(-1);
     }
 });
+
+const botonIzquierda = document.getElementById("left-button");
+const botonDerecha = document.getElementById("right-button");
+
+botonIzquierda.addEventListener("click", function() {
+    moverDavid(-1);
+});
+
+botonDerecha.addEventListener("click", function() {
+    moverDavid(1);
+});
