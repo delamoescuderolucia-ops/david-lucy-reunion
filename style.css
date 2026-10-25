@@ -33,3 +33,40 @@ button:hover {
     background-color: #00f0ff;
     color: #100a24;
 }
+
+#game {
+    width: 90%;
+    max-width: 600px;
+    height: 300px;
+    margin: 40px auto;
+    background: linear-gradient(
+        to bottom,
+        #241044,
+        #100a24
+    );
+    border: 3px solid #00f0ff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px #00f0ff;
+    position: relative;
+    overflow: hidden;
+}
+
+#david {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    color: #ff2a6d;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff2a6d;
+}
+
+.game-message {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    color: #00f0ff;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
