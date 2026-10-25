@@ -11,11 +11,25 @@ let posicionDavid = 30;
 const velocidadDavid = 5;
 
 // Función para mover a David
+
 function moverDavid(direccion) {
+    const escenario = document.getElementById("game");
+    const anchoDavid = david.offsetWidth;
+    const limiteDerecho = escenario.clientWidth - anchoDavid;
+
     posicionDavid += velocidadDavid * direccion;
+
+    if (posicionDavid < 0) {
+        posicionDavid = 0;
+    }
+
+    if (posicionDavid > limiteDerecho) {
+        posicionDavid = limiteDerecho;
+    }
 
     david.style.left = posicionDavid + "px";
 }
+
 
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowRight") {
