@@ -103,4 +103,36 @@ button:hover {
     background: #00f0ff;
     box-shadow: 0 0 15px #00f0ff;
 }
+/* ===== CONTROLES TÁCTILES ===== */
+#controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 20px auto;
+    padding: 0 12px;
+}
 
+#controls button {
+    min-width: 65px;
+    min-height: 55px;
+    padding: 12px 18px;
+    font-size: 18px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#jump-button {
+    background-color: #00f0ff;
+    color: #100a24;
+    border: 2px solid #ff2a6d;
+    box-shadow: 0 0 12px #00f0ff;
+}
+
+#jump-button:active {
+    background-color: #ff2a6d;
+    color: white;
+    box-shadow: 0 0 18px #ff2a6d;
+}
