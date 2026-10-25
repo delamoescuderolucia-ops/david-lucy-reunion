@@ -1,28 +1,48 @@
 
 console.log("Night City cargada");
 
-// Buscamos a David en el HTML
+// ===== ELEMENTOS DEL JUEGO =====
 const david = document.getElementById("david");
+const escenario = document.getElementById("game");
 
-// Posición inicial de David
+const botonIzquierda = document.getElementById("left-button");
+const botonDerecha = document.getElementById("right-button");
+const botonSaltar = document.getElementById("jump-button");
+
+// ===== MOVIMIENTO HORIZONTAL =====
 let posicionDavid = 30;
+let direccionDavid = 0;
 
-// Velocidad de movimiento
 const velocidadDavid = 5;
 
 // ===== SISTEMA DE SALTO =====
+let posicionVertical = 0;
 let velocidadVertical = 0;
 let estaEnElSuelo = true;
 
 const fuerzaSalto = 12;
 const gravedad = 0.6;
 
-// Función para mover a David
+// Distancia entre el borde inferior de David
+// y el borde inferior del escenario.
+const margenSuelo = 15;
 
+// ===== COLOCAR A DAVID =====
+function colocarDavid() {
+    const alturaSuelo =
+        escenario.clientHeight - david.offsetHeight - margenSuelo;
+
+    posicionVertical = alturaSuelo;
+
+    david.style.left = posicionDavid + "px";
+    david.style.top = posicionVertical + "px";
+    david.style.bottom = "auto";
+}
+
+// ===== MOVER A DAVID =====
 function moverDavid(direccion) {
-    const escenario = document.getElementById("game");
-    const anchoDavid = david.offsetWidth;
-    const limiteDerecho = escenario.clientWidth - anchoDavid;
+    const limiteDerecho =
+        escenario.clientWidth - david.offsetWidth;
 
     posicionDavid += velocidadDavid * direccion;
 
@@ -37,16 +57,59 @@ function moverDavid(direccion) {
     david.style.left = posicionDavid + "px";
 }
 
+// ===== SALTO =====
+function saltar() {
+    if (estaEnElSuelo) {
+        velocidadVertical = -fuerzaSalto;
+        estaEnElSuelo = false;
+    }
+}
 
-let direccionDavid = 0;
+// ===== BUCLE PRINCIPAL =====
+function actualizarJuego() {
+    // Movimiento horizontal
+    if (direccionDavid !== 0) {
+        moverDavid(direccionDavid);
+    }
 
+    // Movimiento vertical y gravedad
+    if (!estaEnElSuelo) {
+        velocidadVertical += gravedad;
+        posicionVertical += velocidadVertical;
+
+        const alturaSuelo =
+            escenario.clientHeight - david.offsetHeight - margenSuelo;
+
+        // Aterrizaje
+        if (posicionVertical >= alturaSuelo) {
+            posicionVertical = alturaSuelo;
+            velocidadVertical = 0;
+            estaEnElSuelo = true;
+        }
+
+        david.style.top = posicionVertical + "px";
+    }
+
+    requestAnimationFrame(actualizarJuego);
+}
+
+// ===== CONTROLES DEL TECLADO =====
 document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+        event.preventDefault();
+    }
+
     if (event.key === "ArrowRight") {
         direccionDavid = 1;
     }
 
     if (event.key === "ArrowLeft") {
         direccionDavid = -1;
+    }
+
+    if (event.code === "Space" || event.key === "ArrowUp") {
+        event.preventDefault();
+        saltar();
     }
 });
 
@@ -59,78 +122,49 @@ document.addEventListener("keyup", function(event) {
     }
 });
 
-function actualizarJuego() {
-    // Movimiento horizontal
-    if (direccionDavid !== 0) {
-        moverDavid(direccionDavid);
-    }
-
-// ===== MOVIMIENTO VERTICAL =====
-if (!estaEnElSuelo) {
-    velocidadVertical += gravedad;
-
-    const escenario = document.getElementById("game");
-    const alturaSuelo =
-        escenario.clientHeight - david.offsetHeight - 20;
-
-    const posicionActual = david.offsetTop;
-    const nuevaPosicion = posicionActual + velocidadVertical;
-
-    if (nuevaPosicion >= alturaSuelo) {
-        david.style.top = alturaSuelo + "px";
-        velocidadVertical = 0;
-        estaEnElSuelo = true;
-    } else {
-        david.style.top = nuevaPosicion + "px";
-    }
-}
-
-    requestAnimationFrame(actualizarJuego);
-}
-
-// ===== HACER SALTAR A DAVID =====
-function saltar() {
-    if (estaEnElSuelo) {
-        velocidadVertical = -fuerzaSalto;
-        estaEnElSuelo = false;
-    }
-}
-
-actualizarJuego();
-
-const botonIzquierda = document.getElementById("left-button");
-const botonDerecha = document.getElementById("right-button");
-
-function iniciarMovimiento(direccion) {
-    direccionDavid = direccion;
-}
-
-function detenerMovimiento() {
+// Evita que David siga moviéndose si se pierde el foco
+// de la página mientras se pulsa una tecla.
+window.addEventListener("blur", function() {
     direccionDavid = 0;
+});
+
+// ===== CONTROLES TÁCTILES =====
+function configurarMovimiento(boton, direccion) {
+    if (!boton) return;
+
+    boton.addEventListener("pointerdown", function(event) {
+        event.preventDefault();
+        direccionDavid = direccion;
+
+        if (boton.setPointerCapture) {
+            boton.setPointerCapture(event.pointerId);
+        }
+    });
+
+    boton.addEventListener("pointerup", function(event) {
+        event.preventDefault();
+        direccionDavid = 0;
+    });
+
+    boton.addEventListener("pointercancel", function() {
+        direccionDavid = 0;
+    });
+
+    boton.addEventListener("lostpointercapture", function() {
+        direccionDavid = 0;
+    });
 }
 
-botonIzquierda.addEventListener("pointerdown", function(event) {
-    event.preventDefault();
-    iniciarMovimiento(-1);
-});
+configurarMovimiento(botonIzquierda, -1);
+configurarMovimiento(botonDerecha, 1);
 
-botonDerecha.addEventListener("pointerdown", function(event) {
-    event.preventDefault();
-    iniciarMovimiento(1);
-});
+if (botonSaltar) {
+    botonSaltar.addEventListener("pointerdown", function(event) {
+        event.preventDefault();
+        saltar();
+    });
+}
 
-botonIzquierda.addEventListener("pointerup", detenerMovimiento);
-botonDerecha.addEventListener("pointerup", detenerMovimiento);
-
-botonIzquierda.addEventListener("pointerleave", detenerMovimiento);
-botonDerecha.addEventListener("pointerleave", detenerMovimiento);
-
-botonIzquierda.addEventListener("pointercancel", detenerMovimiento);
-botonDerecha.addEventListener("pointercancel", detenerMovimiento);
-// ===== BOTÓN DE SALTO =====
-const botonSaltar = document.getElementById("jump-button");
-
-botonSaltar.addEventListener("pointerdown", function(event) {
-    event.preventDefault();
-    saltar();
-});
+// ===== INICIAR JUEGO =====
+colocarDavid();
+actualizarJuego();
