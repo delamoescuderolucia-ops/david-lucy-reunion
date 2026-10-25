@@ -136,3 +136,20 @@ button:hover {
     color: white;
     box-shadow: 0 0 18px #ff2a6d;
 }
+
+/* ===== PLATAFORMAS DE NIGHT CITY ===== */
+.platform {
+    position: absolute;
+    width: 120px;
+    height: 14px;
+    left: 180px;
+    top: 190px;
+
+    background: #ff2a6d;
+    border: 2px solid #00f0ff;
+    border-radius: 3px;
+
+    box-shadow:
+        0 0 8px #00f0ff,
+        0 0 16px #ff2a6d;
+}
