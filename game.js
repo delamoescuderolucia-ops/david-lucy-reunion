@@ -127,3 +127,10 @@ botonDerecha.addEventListener("pointerleave", detenerMovimiento);
 
 botonIzquierda.addEventListener("pointercancel", detenerMovimiento);
 botonDerecha.addEventListener("pointercancel", detenerMovimiento);
+// ===== BOTÓN DE SALTO =====
+const botonSaltar = document.getElementById("jump-button");
+
+botonSaltar.addEventListener("pointerdown", function(event) {
+    event.preventDefault();
+    saltar();
+});
