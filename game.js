@@ -58,9 +58,31 @@ document.addEventListener("keyup", function(event) {
         direccionDavid = 0;
     }
 });
+
 function actualizarJuego() {
+    // Movimiento horizontal
     if (direccionDavid !== 0) {
         moverDavid(direccionDavid);
+    }
+
+    // Movimiento vertical
+    if (!estaEnElSuelo) {
+        velocidadVertical += gravedad;
+
+        const posicionVertical = david.offsetTop + velocidadVertical;
+        const alturaSuelo = document.getElementById("game").clientHeight
+            - david.offsetHeight - 15;
+
+        if (posicionVertical >= alturaSuelo) {
+            david.style.top = "";
+            david.style.bottom = "20px";
+
+            velocidadVertical = 0;
+            estaEnElSuelo = true;
+        } else {
+            david.style.bottom = "";
+            david.style.top = posicionVertical + "px";
+        }
     }
 
     requestAnimationFrame(actualizarJuego);
