@@ -80,12 +80,57 @@ function actualizarJuego() {
         const alturaSuelo =
             escenario.clientHeight - david.offsetHeight - margenSuelo;
 
-        // Aterrizaje
+      
+        // Comprobar aterrizaje en el suelo
+        const alturaSuelo =
+            escenario.clientHeight - david.offsetHeight - margenSuelo;
+
         if (posicionVertical >= alturaSuelo) {
             posicionVertical = alturaSuelo;
             velocidadVertical = 0;
             estaEnElSuelo = true;
+        } else {
+            // Comprobar aterrizaje sobre las plataformas
+            const plataformas = document.querySelectorAll(".platform");
+
+            for (const plataforma of plataformas) {
+                const davidIzquierda = posicionDavid;
+                const davidDerecha = posicionDavid + david.offsetWidth;
+
+                const plataformaIzquierda = plataforma.offsetLeft;
+                const plataformaDerecha =
+                    plataforma.offsetLeft + plataforma.offsetWidth;
+
+                const davidAntesDeCaer =
+                    posicionVertical - velocidadVertical;
+
+                const davidAbajoAntes =
+                    davidAntesDeCaer + david.offsetHeight;
+
+                const davidAbajoAhora =
+                    posicionVertical + david.offsetHeight;
+
+                const plataformaArriba = plataforma.offsetTop;
+
+                if (
+                    velocidadVertical > 0 &&
+                    davidAbajoAntes <= plataformaArriba &&
+                    davidAbajoAhora >= plataformaArriba &&
+                    davidDerecha > plataformaIzquierda &&
+                    davidIzquierda < plataformaDerecha
+                ) {
+                    posicionVertical =
+                        plataformaArriba - david.offsetHeight;
+
+                    velocidadVertical = 0;
+                    estaEnElSuelo = true;
+                    break;
+                }
+            }
         }
+
+        david.style.top = posicionVertical + "px";
+
 
         david.style.top = posicionVertical + "px";
     }
