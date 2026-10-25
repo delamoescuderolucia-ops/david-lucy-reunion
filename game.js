@@ -16,3 +16,13 @@ function moverDavid(direccion) {
 
     david.style.left = posicionDavid + "px";
 }
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        moverDavid(1);
+    }
+
+    if (event.key === "ArrowLeft") {
+        moverDavid(-1);
+    }
+});
