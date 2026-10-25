@@ -10,6 +10,13 @@ let posicionDavid = 30;
 // Velocidad de movimiento
 const velocidadDavid = 5;
 
+// ===== SISTEMA DE SALTO =====
+let velocidadVertical = 0;
+let estaEnElSuelo = true;
+
+const fuerzaSalto = 12;
+const gravedad = 0.6;
+
 // Función para mover a David
 
 function moverDavid(direccion) {
