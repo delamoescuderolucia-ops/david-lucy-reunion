@@ -31,13 +31,24 @@ function moverDavid(direccion) {
 }
 
 
+let direccionDavid = 0;
+
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowRight") {
-        moverDavid(1);
+        direccionDavid = 1;
     }
 
     if (event.key === "ArrowLeft") {
-        moverDavid(-1);
+        direccionDavid = -1;
+    }
+});
+
+document.addEventListener("keyup", function(event) {
+    if (
+        event.key === "ArrowRight" ||
+        event.key === "ArrowLeft"
+    ) {
+        direccionDavid = 0;
     }
 });
 
